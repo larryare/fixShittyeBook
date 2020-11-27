@@ -12,14 +12,15 @@ fileopen = open(args.input, "r")
 
 text = fileopen.read()
 
-triple_underscore_re = re.compile(r'_{3}')
-text = re.sub(triple_underscore_re, "_ ", text)
+text = text.replace("<I>", "")
+text = text.replace("</I>", "")
 
-underscore_to_bolt_re = re.compile(r'((._)+)')
-text = re.sub(underscore_to_bolt_re, r'**\1**', text)
+text = text.replace("___", " ")
 
-underscore_to_nil_re = re.compile(r'_')
-text = re.sub(underscore_to_nil_re, "", text)
+underscore_to_bold_re = re.compile(r'[^_](?:_[^_])+')
+text = re.sub(underscore_to_bold_re, r'**\g<0>**', text)
+
+text = text.replace("_", "")
 
 out = open(args.output, "w")
 out.write(text)
