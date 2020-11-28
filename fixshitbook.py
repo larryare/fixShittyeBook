@@ -9,6 +9,26 @@ parser.add_argument("-y", "--year", help="Release year")
 parser.add_argument("-a", "--author", help="Author")
 args = parser.parse_args()
 
+lst = {
+    'à': 'ą',
+    'À': 'Ą',
+    'è': 'č',
+    'È': 'Č',
+    'æ': 'ę',
+    'Æ': 'Ę',
+    'ë': 'ė',
+    'Ë': 'Ė',
+    'á': 'į',
+    'Á': 'Į',
+    'Ð': 'Š',
+    'ð': 'š',
+    'û': 'ū',
+    'Û': 'Ū',
+    'ø': 'ų',
+    'Ø': 'Ų',
+    'þ': 'ž',
+    'Þ': 'Ž'
+}
 
 fileopen = open(args.input, "r")
 
@@ -18,6 +38,9 @@ fileopen.close()
 
 lines = text.splitlines()
 
+for key in lst.keys():
+    text = text.replace(key, lst[key])
+print(text)
 
 title = "error"
 if args.title == None:
@@ -47,7 +70,7 @@ text = re.sub(underscore_to_bold_re, r'**\g<0>**', text)
 
 text = text.replace("_", "")
 
-out = open("{}.md".format(title), "w")
+out = open("{}.md".format(title), "w", encoding="utf-8")
 out.writelines(["% {}\n".format(args.title), "% {}\n".format(args.author), "% {}\n".format(args.year)])
 out.write(text)
 out.close()
