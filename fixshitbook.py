@@ -3,17 +3,27 @@ import argparse
 import pypandoc
 
 parser = argparse.ArgumentParser(description="Removes shit from ripped books")
-parser.add_argument("-i", "--input", help="inputfile.txt", required=True)
-parser.add_argument("-t", "--title", help="Book title", required=True)
+parser.add_argument("input", help="inputfile.txt")
+parser.add_argument("-t", "--title", help="Book title")
 parser.add_argument("-y", "--year", help="Release year")
 parser.add_argument("-a", "--author", help="Author")
 args = parser.parse_args()
 
 
-
 fileopen = open(args.input, "r")
 
 text = fileopen.read()
+
+fileopen.close()
+
+lines = text.splitlines()
+
+
+title = "error"
+if args.title == None:
+    title = lines[0]
+else:
+    title = args.title
 
 text = text.replace("<I", "")
 text = text.replace("/I>", "")
@@ -37,8 +47,9 @@ text = re.sub(underscore_to_bold_re, r'**\g<0>**', text)
 
 text = text.replace("_", "")
 
-out = open("{}.md".format(args.title), "w")
+out = open("{}.md".format(title), "w")
 out.writelines(["% {}\n".format(args.title), "% {}\n".format(args.author), "% {}\n".format(args.year)])
 out.write(text)
+out.close()
 
-output = pypandoc.convert_file("{}.md".format(args.title), "epub", outputfile="{}.epub".format(args.title))
+output = pypandoc.convert_file("{}.md".format(title), "epub", outputfile="{}.epub".format(title))
