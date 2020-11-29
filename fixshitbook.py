@@ -30,18 +30,18 @@ lst = {
     'Þ': 'Ž'
 }
 
-fileopen = open(args.input, "r")
-
-text = fileopen.read()
-
-fileopen.close()
-
-lines = text.splitlines()
+text = None
+try:
+    with open(args.input, "r") as fname:
+        text = fname.read()
+except FileNotFoundError:
+    print("No such file or direcory: " + args.input)
+    exit(1)
 
 for key in lst.keys():
     text = text.replace(key, lst[key])
 
-title = "error"
+lines = text.splitlines()
 if args.title == None:
     title = lines[0]
 else:
@@ -69,9 +69,8 @@ text = re.sub(underscore_to_bold_re, r'**\g<0>**', text)
 
 text = text.replace("_", "")
 
-out = open("{}.md".format(title), "w", encoding="utf-8")
-out.writelines(["% {}\n".format(args.title), "% {}\n".format(args.author), "% {}\n".format(args.year)])
-out.write(text)
-out.close()
+with open("{}.md".format(title), "w", encoding="utf-8") as out:
+    out.writelines(["% {}\n".format(args.title), "% {}\n".format(args.author), "% {}\n".format(args.year)])
+    out.write(text)
 
 output = pypandoc.convert_file("{}.md".format(title), "epub", outputfile="{}.epub".format(title))
