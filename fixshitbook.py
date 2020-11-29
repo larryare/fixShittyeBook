@@ -40,7 +40,6 @@ lines = text.splitlines()
 
 for key in lst.keys():
     text = text.replace(key, lst[key])
-print(text)
 
 title = "error"
 if args.title == None:
